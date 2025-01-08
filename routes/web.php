@@ -8,4 +8,4 @@ Route::get('/', function () {
 });
 
 Route::get('/telegram' , [TelegramController::class , 'index']);
-Route::post('/send' , [TelegramController::class , 'store']);
+// Route::post('/send' , [TelegramController::class , 'store']);

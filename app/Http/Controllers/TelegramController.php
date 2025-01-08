@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Workers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
 class TelegramController extends Controller
 {
+    public $workers;
 
     public function index()
     {
@@ -18,21 +20,20 @@ class TelegramController extends Controller
         $date = $request->validate([
             'text' => 'required',
         ]);
-
+        $workers = Workers::all();
+        $message = "Ishchilar:\n";
+        foreach ($workers as $worker) {
+            $message .= "Ismi: {$worker->first_name},Familiyasi: {$worker->last_name} ,
+            Yoshi: {$worker->age}, Telefon raqami: {$worker->phone_number}";
+        }
         $response = Http::post($token . '/sendMessage' , [
             'parse_mode' => 'HTML',
             'chat_id' => '6784560209',
-            'text' => $date['text'],
+            'text' => $message,
             'reply_markup' => json_encode([
-                'keyboard' => [
+                'inline_keyboard' => [
                     [
-                        ['text' => 'Iskandar'],
-                    ],
-                    [
-                        ['text' => 'Iskandar'] , ['text' => 'Ravshanbek'],
-                    ],
-                    [
-                        ['text' => 'Iskandar'] , ['text' => 'Ravshanbek'] , ['text' => 'Abdulaziz'],
+                        ['text' => 'Ishchilar' , 'callback_data' => 'button'],
                     ],
                 ],
                 'resize_keyboard' => true, 
